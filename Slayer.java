@@ -44,5 +44,6 @@ public class Slayer {
 	private int health;
 	private int frequency;
 	private int damage;
-	private int range;
+    private int range;
+    private Game game;
 }

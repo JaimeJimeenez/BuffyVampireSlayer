@@ -33,5 +33,6 @@ public class Vampire {
 	private boolean behavior;
 	private int health;
 	private int damage;
-	private int speed;
+    private int speed;
+    private Game game;
 }
