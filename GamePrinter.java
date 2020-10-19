@@ -18,7 +18,9 @@ public class GamePrinter {
 	}
 	
 	private void encodeGame(Game game) {
-		// TODO fill your code
+		System.out.println("Number of cycles: " +game.getCycles());
+		System.out.println("Coins: " +game.getPlayer().getCoins());
+		game.getVampireList().remainingVampires();
 	}
 	
 	 public String toString() {

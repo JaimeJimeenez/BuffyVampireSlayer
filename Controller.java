@@ -1,8 +1,8 @@
 package control;
 
 import java.util.Scanner;
-
 import logic.Game;
+import characters.*;
 
 public class Controller {
 
@@ -34,6 +34,8 @@ public class Controller {
     
     public void run() {
 		// TODO fill your code
+    	//while (!game.checkEnd()) 
+    	
     }
 
 }

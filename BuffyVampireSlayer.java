@@ -1,11 +1,11 @@
-package buffyVampireSlayer;
+package console;
 
 import java.util.Scanner;
 import logic.Level;
 import control.Controller;
 import logic.Game;
 
-public class BuffyVampireSlayer {
+public class BuffyVampiresSlayer {
 		public static final String version = "1.0";
 		public static final String usageMsg = "Usage: Vampire slayer <level> [seed]";
 		public static final String welcomeMsg = String.format("Buffy the Vampire Slayer " + version + "%n");
