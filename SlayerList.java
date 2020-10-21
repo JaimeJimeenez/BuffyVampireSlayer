@@ -1,17 +1,13 @@
 package characters;
 
 public class SlayerList {
-	
+
 	public SlayerList() {
-		
+		data = new Slayer[99]; //Provisional
 	}
 	
-	public boolean checkDeaths() {
-		
-		for (Slayer elem : data) 
-			if (elem.getHealth() != 0) return false;  
-		
-		return true;
+	public Slayer[] getData() {
+		return data;
 	}
 	
 	private Slayer[] data;

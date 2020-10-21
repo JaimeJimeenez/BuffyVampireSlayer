@@ -2,7 +2,6 @@ package control;
 
 import java.util.Scanner;
 import logic.Game;
-import characters.*;
 
 public class Controller {
 
@@ -19,9 +18,6 @@ public class Controller {
 	public static final String unknownCommandMsg = String.format("Unknown command");
 	public static final String invalidCommandMsg = String.format("Invalid command");
 	public static final String invalidPositionMsg = String.format("Invalid position");
-
-    private Game game;
-    private Scanner scanner;
     
     public Controller(Game game, Scanner scanner) {
 	    this.game = game;
@@ -34,9 +30,35 @@ public class Controller {
     
     public void run() {
 		// TODO fill your code
-    	//while (!game.checkEnd()) 
+    	while(!game.checkEnd()) {
+    		
+    		System.out.print(prompt);
+        	String command = scanner.nextLine();
+        	switch(command) {
+        	
+        	case "add": System.out.println("Adding slayer.");
+        	break;
+        	
+        	case "help": System.out.println(helpMsg);
+        	break;
+        	
+        	case "exit": System.out.close();
+        	break;
+        	
+        	case "none": break;
+        	
+        	default: System.out.println(invalidCommandMsg);
+        	
+        	}
+        	game.update();
+        	printGame();
+    	}
     	
     }
-
+    
+    private Game game;
+    private Scanner scanner;
+    
 }
+
 

@@ -16,12 +16,11 @@ public enum Level {
 		this.dim_y = dim_y;
 	}
 
-	// TODO fill your code
-	//Getter?
+	//Getter
 	public String getName() {
 		return name;
 	}
-
+	
 	public int getNumberOfVampires() {
 		return numberOfVampires;
 	}

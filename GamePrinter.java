@@ -12,15 +12,27 @@ public class GamePrinter {
 	final String space = " ";
 	
 	public GamePrinter (Game game, int cols, int rows) {
+		
 		this.game = game;
 		this.numRows = rows;
 		this.numCols = cols;
+	
 	}
 	
 	private void encodeGame(Game game) {
-		System.out.println("Number of cycles: " +game.getCycles());
+		
+		System.out.println("Number of cycles: ");
 		System.out.println("Coins: " +game.getPlayer().getCoins());
-		game.getVampireList().remainingVampires();
+		System.out.println("Remaining vampires: ");
+		System.out.println("Vampires on the board: ");
+		
+		this.board = new String[numRows][numCols];
+		for (int i = 0; i < numRows; i++) {
+			for (int j = 0; j < numCols; j++) {
+				board[i][j] = game.getPositionToString(i, j);
+			}
+		}
+		
 	}
 	
 	 public String toString() {
@@ -57,4 +69,3 @@ public class GamePrinter {
 		return str.toString();
 	    }
 }
-

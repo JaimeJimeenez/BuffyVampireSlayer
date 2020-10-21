@@ -1,67 +1,90 @@
 package logic;
 
+import java.util.Random;
 import view.GamePrinter;
 import characters.*;
 
 public class Game {
 
+	public static final Random rand = new Random();
 	
-	public Game(Long seed, Enum level) {
+	public Game(Long seed, Level level) {
+		
 		this.seed = seed;
 		this.level = level;
+		this.player = new Player();
+		printedGame = new GamePrinter(this, setDim_x(this.level), setDim_y(this.level));
+		gameBoard = new GameObjectBoard(level);
 		
-		player = new Player();
-		slayerList = new SlayerList();
-		vampireList = new VampireList(level);
-		cycles = 0;
 	}
 	
-	public Enum getLevel() {
+	//SET DIMENSIONS
+	public int setDim_x(Level level) {
+		if (level.name() == "EASY") return 8;
+		if (level.name() == "HARD") return 7;
+		if (level.name() == "INSANE") return 5;
+		else return - 1;
+	}
+	
+	public int setDim_y(Level level) {
+		if (level.name() == "EASY") return 4;
+		if (level.name() == "HARD") return 3;
+		if (level.name() == "INSANE") return 6;
+		else return - 1;
+	}
+	
+	//Getters
+	public Long getSeed() {
+		return seed;
+	}
+	
+	public Level getLevel() {
 		return level;
 	}
-
+	
 	public Player getPlayer() {
 		return player;
 	}
 	
-	public SlayerList getSlayerList() {
-		return slayerList;
+	public GameObjectBoard getGameObjectBoard() {
+		return gameBoard;
 	}
 	
-	public VampireList getVampireList() {
-		return vampireList;
-	}
-	
-	//Methods of the game
-	public void update() {
-		player.setCoins();
-		//Advance a position vampire
-	}
-	
-	public void attack() {
-		for (Vampire elem : vampireList.getData()) {
-			//if (elem.getPosition() == Slayer.position - 1) Slayer.setHealth(Slayer.getHealth() - elem.getDamage());
+	public String getPositionToString(int i, int j) {
+		String returnCharacter = " - ";
+		
+		if (gameBoard.getVampires().getData().length != 0) {
+			for (Vampire elem : gameBoard.getVampires().getData()) 
+				if (elem.getDim_x() == i && elem.getDim_y() == j) returnCharacter = elem.toString();
 		}
+		
+		return returnCharacter;
+	 }
+	
+	public void update() {
+		addVampire();
+		player.setCoins();
+	}
+	
+	public void addVampire() {
+		
+		Vampire newVampire = new Vampire(level);
+		gameBoard.addVampire(newVampire);
 	}
 	
 	public boolean checkEnd() {
-		slayerList.checkDeaths();
-		return true;
+		return false;
 	}
 	
-	public int getCycles() {
-		return cycles;
+	public String toString() {
+		return printedGame.toString();
 	}
 	
-	public void updateCycles() {
-		cycles++;
-	}
+
 	
 	private Long seed;
-	private Enum level;
-	private GamePrinter game;
-	private SlayerList slayerList;
-	private VampireList vampireList;
+	private Level level;
 	private Player player;
-	private int cycles;
+	private GamePrinter printedGame;
+	private GameObjectBoard gameBoard;
 }

@@ -10,13 +10,14 @@ public class Player {
 		coins = 50;
 	}
 	
-	public void setCoins() {
-		if (rand.nextBoolean()) coins += 10; 
-	}
-	
 	public int getCoins() {
 		return coins;
 	}
 	
+
+	public void setCoins() {
+		if (rand.nextBoolean()) coins += 10; 
+	}
+
 	private int coins;
 }
