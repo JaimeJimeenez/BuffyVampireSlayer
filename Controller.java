@@ -29,36 +29,52 @@ public class Controller {
    }
     
     public void run() {
-		// TODO fill your code
-    	while(!game.checkEnd()) {
-    		
-    		System.out.print(prompt);
-        	String command = scanner.nextLine();
-        	switch(command) {
-        	
-        	case "add": System.out.println("Adding slayer.");
-        	break;
-        	
-        	case "help": System.out.println(helpMsg);
-        	break;
-        	
-        	case "exit": System.out.close();
-        	break;
-        	
-        	case "none": break;
-        	
-        	default: System.out.println(invalidCommandMsg);
-        	
-        	}
-        	game.update();
-        	printGame();
-    	}
+    	
+    	printGame();
+    	
+		while(!game.checkEnd()) {
+
+	    	String command;
+	    	
+	    	System.out.print(prompt);
+	    	command = scanner.nextLine();
+	    	String[] dim = command.split(" ");
+	    	String order = dim[0];
+	    	
+	    	switch(order) {
+	    	
+	    	case "add": 
+	    		int dim_x = Integer.parseUnsignedInt(dim[1]);
+	    		int dim_y = Integer.parseUnsignedInt(dim[2]);
+	    		
+	    		if (dim_x > game.setDim_x(game.getLevel()) - 1 || dim_y > game.setDim_y(game.getLevel())) System.out.println(invalidPositionMsg);
+	    		else game.addSlayer(dim_x, dim_y);
+	    		break;
+	    		
+	    	case "help":
+	    		System.out.println(helpMsg);
+	    		break;
+	    	
+	    	case "reset": 
+	    		break;
+	    		
+	    	case "exit": 
+	    		System.out.println("Game Ended");
+	    		break;
+	    	
+	    	case "none": break;
+	    	
+	    	default: System.out.println(invalidCommandMsg); //OR unknownCommandMsg
+	    	
+	    	}
+	    	
+	    	game.update();
+	    	printGame();
+		}
     	
     }
-    
+  
     private Game game;
     private Scanner scanner;
     
 }
-
-

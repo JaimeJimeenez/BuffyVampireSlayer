@@ -12,16 +12,15 @@ public class GamePrinter {
 	final String space = " ";
 	
 	public GamePrinter (Game game, int cols, int rows) {
-		
 		this.game = game;
 		this.numRows = rows;
 		this.numCols = cols;
-	
+		
 	}
 	
 	private void encodeGame(Game game) {
 		
-		System.out.println("Number of cycles: ");
+		System.out.println("Number of cycles: " +(game.getCycles() + 1));
 		System.out.println("Coins: " +game.getPlayer().getCoins());
 		System.out.println("Remaining vampires: ");
 		System.out.println("Vampires on the board: ");

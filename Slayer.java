@@ -37,6 +37,14 @@ public class Slayer {
 		return dim_y;
 	}
 	
+	public boolean isInPosition(int dim_x, int dim_y) {
+		return (this.dim_x == dim_x && this.dim_y == dim_y);
+	}
+	
+	public void setHealth(int health) {
+		this.health = health;
+	}
+	
 	public String toString() {
 		return "S [" + getHealth() + "]";
 	}
