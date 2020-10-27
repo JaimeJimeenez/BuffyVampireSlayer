@@ -31,7 +31,7 @@ public class Controller {
     public void run() {
     	
     	
-		while(!game.checkEnd()) {
+		while(!game.getEnd()) {
 
 	    	String command;
 	    	int aux = game.getCycles();
@@ -65,6 +65,7 @@ public class Controller {
 	    		
 	    	case "exit": 
 	    		System.out.println("Game Ended");
+	    		game.setEnd(true);
 	    		break;
 	    	
 	    	case "none": game.updateCycles();

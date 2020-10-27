@@ -12,6 +12,7 @@ public class Game {
 		
 		this.seed = seed;
 		this.level = level;
+		end = false;
 		cycles = 1;
 		this.player = new Player();
 		printedGame = new GamePrinter(this, setDim_x(), setDim_y());
@@ -27,6 +28,11 @@ public class Game {
 		return level.getDim_y();
 	}
 	
+	//SET EXIT
+	public void setEnd(boolean end) {
+		this.end = end;
+	}
+	
 	//Getters
 	public Long getSeed() {
 		return seed;
@@ -34,6 +40,10 @@ public class Game {
 	
 	public Level getLevel() {
 		return level;
+	}
+	
+	public boolean getEnd() {
+		return end;
 	}
 	
 	public int getCycles() {
@@ -82,15 +92,11 @@ public class Game {
 		gameBoard.attack();
 		gameBoard.removeDeadObjects();
 		gameBoard.updateVampireCycles();
-		checkEnd();
+		end = gameBoard.checkEnd();
 	}
 	
 	public void dataVampires() {
 		gameBoard.dataVampires();
-	}
-	
-	public boolean checkEnd() {
-		return gameBoard.checkEnd();
 	}
 	
 	public String toString() {
@@ -99,6 +105,7 @@ public class Game {
 
 	private Long seed;
 	private Level level;
+	private boolean end;
 	private int cycles;
 	private Player player;
 	private GamePrinter printedGame;
