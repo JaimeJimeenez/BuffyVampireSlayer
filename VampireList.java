@@ -1,16 +1,21 @@
 package characters;
 
-import logic.Level;
-
 public class VampireList {
 
-	public VampireList(Level level) {
-		if (level.getName() == "easy") data = new Vampire[3];
-		if (level.getName() == "hard") data = new Vampire[5];
-		if (level.getName() == "insane") data = new Vampire[10];
+	public VampireList(int numberOfVampires) {
+		data = new Vampire[numberOfVampires];
 	}
 	
 	public Vampire[] getData() {
+		return data;
+	}
+	
+	public void setData(Vampire[] data) {
+		this.data = data;
+	}
+	
+	public Vampire[] removeVampire(int i) {
+		System.arraycopy(data, i + 1, data[i], i, data.length - 1 - i);
 		return data;
 	}
 	

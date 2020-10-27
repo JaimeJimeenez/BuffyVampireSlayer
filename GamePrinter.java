@@ -20,10 +20,9 @@ public class GamePrinter {
 	
 	private void encodeGame(Game game) {
 		
-		System.out.println("Number of cycles: " +(game.getCycles() + 1));
+		System.out.println("Number of cycles: " +(game.getCycles()));
 		System.out.println("Coins: " +game.getPlayer().getCoins());
-		System.out.println("Remaining vampires: ");
-		System.out.println("Vampires on the board: ");
+		game.dataVampires();
 		
 		this.board = new String[numRows][numCols];
 		for (int i = 0; i < numRows; i++) {

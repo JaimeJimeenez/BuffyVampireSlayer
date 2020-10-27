@@ -9,9 +9,9 @@ public class GameObjectBoard {
 	public static final Random rand = new Random();
 	
 	public GameObjectBoard(Level level) {
-		this.vampireList = new VampireList(level);
+		this.vampireList = new VampireList(level.getNumberOfVampires());
 		this.slayerList = new SlayerList();
-		
+		this.level = level;
 		numberOfSlayers = 0;
 		numberOfVampires = 0;
 	}
@@ -43,13 +43,12 @@ public class GameObjectBoard {
 		return true;
 	}
 	
-	public boolean addVampire(Level level) {
+	public boolean addVampire() {
 		return (rand.nextDouble() < level.getVampireFrequency());
 	}
 	
-	public VampireList fillVampires(Level level) {
+	public VampireList fillVampires() {
 		Vampire newVampire = new Vampire(level);
-		
 		
 		for (Slayer elem : slayerList.getData()) {
 			if (elem != null && elem.isInPosition(newVampire.getDim_x(), newVampire.getDim_y())) return vampireList;
@@ -59,14 +58,29 @@ public class GameObjectBoard {
 			if (elem != null && elem.isInPosition(newVampire.getDim_x(), newVampire.getDim_y())) return vampireList;
 		}
 		
-		vampireList.getData()[numberOfVampires] = newVampire;
-		numberOfVampires++;
+		if (numberOfVampires < level.getNumberOfVampires()) {
+			vampireList.getData()[numberOfVampires] = newVampire;
+			numberOfVampires++;
+		}
 		
 		return vampireList;
 	}
 	
+	public void dataVampires() {
+		int onBoard = 0;
+		int remaining = 0;
+		
+		for (Vampire elem : vampireList.getData()) {
+			if (elem == null) remaining++;
+			if (elem != null && elem.getHealth() != 0) onBoard++;
+		}
+		
+		System.out.println("Remaining vampires: " +remaining);
+		System.out.println("Vampires on board: " +onBoard);
+		
+	}
+	
 	public SlayerList fillSlayers(int dim_x, int dim_y) {
-
 		Slayer newSlayer = new Slayer(dim_x, dim_y);
 		
 		slayerList.getData()[numberOfSlayers] = newSlayer;
@@ -78,8 +92,12 @@ public class GameObjectBoard {
 	public void advance() {
 		for (Vampire eachVampire: vampireList.getData()) 
 			for (Slayer eachSlayer : slayerList.getData()) {
-				if (eachVampire != null && eachSlayer != null && (eachSlayer.getDim_x() + 1 != eachSlayer.getDim_x())) eachVampire.updateDim_x(eachVampire.getDim_x() - 1);
+				if (eachVampire != null && eachSlayer != null && !eachSlayer.isInPosition(eachVampire.getDim_x() - 1, eachVampire.getDim_y()) && eachVampire.getCycles() % 2 == 0) eachVampire.updateDim_x(eachVampire.getDim_x() - 1);
 			}
+	}
+	
+	public void updateVampireCycles() {
+		for (Vampire elem : vampireList.getData())  if (elem != null) elem.setCycles();
 	}
 	
 	public void attack() {
@@ -101,29 +119,25 @@ public class GameObjectBoard {
 		}
 	}
 	
+	public SlayerList removeSlayer(int i) {
+		System.arraycopy(slayerList.getData(), i + 1, slayerList.getData()[i], i, slayerList.getData().length - 1  - i);
+		return slayerList;
+	}
+	
+	//Remaining
 	public void removeDeadObjects() {
 		
-		for (int i = 0; i < vampireList.getData().length; i++) {
-			if (vampireList.getData()[i] != null && vampireList.getData()[i].getHealth() == 0) this.vampireList = removeDeadVampires(vampireList, vampireList.getData()[i], i);
+		for (int i  = 0; i < vampireList.getData().length; i++) {
+			if (vampireList.getData()[i] != null && vampireList.getData()[i].getHealth() == 0) vampireList.setData(vampireList.removeVampire(i));
 		}
 		
 		for (int i = 0; i < slayerList.getData().length; i++) {
-			if (slayerList.getData()[i] != null && slayerList.getData()[i].getHealth() == 0) this.slayerList = removeDeadSlayers(slayerList, slayerList.getData()[i], i);
+			if (slayerList.getData()[i] != null && slayerList.getData()[i].getHealth() == 0) this.slayerList = removeSlayer(i);
 		}
-	}
-	
-	public SlayerList removeDeadSlayers(SlayerList actualList, Slayer element, int i) {
-		System.arraycopy(actualList.getData(), i + 1, element, i, actualList.getData().length - 1 - i);
-		return actualList;
-	}
-	
-	public VampireList removeDeadVampires(VampireList actualList, Vampire element, int i) {
-		System.arraycopy(actualList.getData(), i + 1, element, i, actualList.getData().length - 1 - i);
-		return actualList;
-	}
-	
-	public boolean checkEnd() {
 		
+	}
+
+	public boolean checkEnd() {
 		int cont = 0;
 		
 		for (Vampire elem : vampireList.getData()) {
@@ -137,15 +151,17 @@ public class GameObjectBoard {
 			}
 		}
 		
-		if (cont == 3) return true;
+		if (cont == level.getNumberOfVampires()) {
+			System.out.println("You win");
+			return true;
+		}
 		
 		return false;
-		
 	}
 	
 	private VampireList vampireList;
 	private SlayerList slayerList;
-
+	private Level level;
 	private int numberOfSlayers;
 	private int numberOfVampires;
 }

@@ -30,12 +30,13 @@ public class Controller {
     
     public void run() {
     	
-    	printGame();
     	
 		while(!game.checkEnd()) {
 
 	    	String command;
+	    	int aux = game.getCycles();
 	    	
+	    	printGame();
 	    	System.out.print(prompt);
 	    	command = scanner.nextLine();
 	    	String[] dim = command.split(" ");
@@ -47,29 +48,34 @@ public class Controller {
 	    		int dim_x = Integer.parseUnsignedInt(dim[1]);
 	    		int dim_y = Integer.parseUnsignedInt(dim[2]);
 	    		
-	    		if (dim_x > game.setDim_x(game.getLevel()) - 1 || dim_y > game.setDim_y(game.getLevel())) System.out.println(invalidPositionMsg);
-	    		else game.addSlayer(dim_x, dim_y);
+	    		if (dim_x > game.setDim_x() - 1  || dim_x <= 0 || dim_y > game.setDim_y() || dim_y <= 0) System.out.println(invalidPositionMsg);
+	    		else {
+	    			game.addSlayer(dim_x, dim_y);
+	    			game.updateCycles();
+	    		}
 	    		break;
 	    		
 	    	case "help":
 	    		System.out.println(helpMsg);
 	    		break;
 	    	
-	    	case "reset": 
+	    	case "reset": Controller newController = new Controller (new Game(game.getSeed(), game.getLevel()), new Scanner(System.in));
+	    	newController.run();
 	    		break;
 	    		
 	    	case "exit": 
 	    		System.out.println("Game Ended");
 	    		break;
 	    	
-	    	case "none": break;
+	    	case "none": game.updateCycles();
+	    		break;
 	    	
-	    	default: System.out.println(invalidCommandMsg); //OR unknownCommandMsg
+	    	default: 
+	    		System.out.println(invalidCommandMsg); 
+	    		//OR unknownCommandMsg
 	    	
 	    	}
-	    	
-	    	game.update();
-	    	printGame();
+	    	if (aux != game.getCycles()) game.update();
 		}
     	
     }

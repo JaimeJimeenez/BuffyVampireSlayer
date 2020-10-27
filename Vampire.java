@@ -13,6 +13,7 @@ public class Vampire {
 		speed = 1;
 		this.dim_x = setDim_x(level);
 		this.dim_y = setDim_y(level);
+		cycles = 0;
 	}
 	
 	public int getHealth() {
@@ -35,22 +36,24 @@ public class Vampire {
 		return dim_y;
 	}
 	
+	public int getCycles() {
+		return cycles;
+	}
+	
+	public void setCycles() {
+		cycles++;
+	}
+	
 	public void setHealth(int health) {
 		this.health = health;
 	}
 	
 	public int setDim_x(Level level) {
-		if (level.getName() == "easy") return 7;
-		if (level.getName() == "hard") return 6;
-		if (level.getName() == "insane") return 4;
-		else return -1;
+		return level.getDim_x() - 1;
 	}
 	
 	public int setDim_y(Level level) {
-		if (level.getName() == "easy") return rand.nextInt(4);
-		if (level.getName() == "hard") return rand.nextInt(3);
-		if (level.getName() == "insane") return rand.nextInt(5);
-		else return - 1;
+		return rand.nextInt(level.getDim_y());
 	}
 	
 	public boolean isInPosition(int dim_x, int dim_y) {
@@ -73,4 +76,5 @@ public class Vampire {
 	int damage;
 	int speed;
 	int dim_x, dim_y;
+	int cycles;
 }

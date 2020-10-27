@@ -12,29 +12,22 @@ public class Game {
 		
 		this.seed = seed;
 		this.level = level;
-		cycles = 0;
+		cycles = 1;
 		this.player = new Player();
-		printedGame = new GamePrinter(this, setDim_x(this.level), setDim_y(this.level));
+		printedGame = new GamePrinter(this, setDim_x(), setDim_y());
 		gameBoard = new GameObjectBoard(level);
 	}
 	
 	//SET DIMENSIONS
-	public int setDim_x(Level level) {
-		if (level.getName() == "easy") return 8;
-		if (level.getName() == "hard") return 7;
-		if (level.getName() == "insane") return 5;
-		else return - 1;
+	public int setDim_x() {
+		return level.getDim_x();
 	}
 	
-	public int setDim_y(Level level) {
-		if (level.getName() == "easy") return 4;
-		if (level.getName() == "hard") return 3;
-		if (level.getName() == "insane") return 6;
-		else return - 1;
+	public int setDim_y() {
+		return level.getDim_y();
 	}
 	
 	//Getters
-	
 	public Long getSeed() {
 		return seed;
 	}
@@ -58,18 +51,21 @@ public class Game {
 	public String getPositionToString(int i, int j) {
 		
 		for (Vampire elem : gameBoard.getVampires().getData())
-			if (elem != null && elem.isInPosition(j, i) && elem.getHealth() > 0) return elem.toString();
+			if (elem != null && elem.isInPosition(j, i)) return elem.toString();
 		
 		
 		for (Slayer elem : gameBoard.getSlayers().getData()) 
-			if (elem != null && elem.isInPosition(j, i) && elem.getHealth() > 0) return elem.toString();
-		
+			if (elem != null && elem.isInPosition(j, i)) return elem.toString();
+
 		return " - ";
 	 }
 	
+	public void updateCycles() {
+		cycles++;
+	}
+	
 	public void addSlayer(int dim_x, int dim_y) {
 		
-		//Try and catch??
 		if (player.getCoins() >= 50 && gameBoard.checkPosition(dim_x, dim_y)) {
 				gameBoard.fillSlayers(dim_x - 1, dim_y - 1);
 				player.setCoins();
@@ -80,13 +76,17 @@ public class Game {
 	
 	public void update() {
 		
-		if (cycles % 2 == 0) gameBoard.advance();
-		if (gameBoard.addVampire(level)) gameBoard.fillVampires(level);
+		gameBoard.advance();
+		if (gameBoard.addVampire()) gameBoard.fillVampires();
 		player.updateCoins();
 		gameBoard.attack();
-		cycles++;
 		gameBoard.removeDeadObjects();
+		gameBoard.updateVampireCycles();
 		checkEnd();
+	}
+	
+	public void dataVampires() {
+		gameBoard.dataVampires();
 	}
 	
 	public boolean checkEnd() {
