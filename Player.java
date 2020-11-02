@@ -1,10 +1,12 @@
 package characters;
 
+import logic.Game;
+
 import java.util.Random;
 
 public class Player {
 	
-	public static final Random rand = new Random();
+	public static final Random rand = new Random(Game.getSeed());
 
 	public Player() { coins = 50; }
 	

@@ -4,7 +4,7 @@ import characters.*;
 import view.GamePrinter;
 
 public class Game {
-
+	
 	public Game(Long seed, Level level) {
 		
 		this.seed = seed;
@@ -18,7 +18,7 @@ public class Game {
 		end = false;
 	}
 	
-	public Long getSeed() { return seed; }
+	public static Long getSeed() { return seed; }
 	
 	public Level getLevel() { return level; }
 	
@@ -75,7 +75,7 @@ public class Game {
 	public String toString() { return printedGame.toString(); }
 	
 	//Attributes
-	private Long seed;
+	private static Long seed;
 	private Level level;
 	private GameObjectBoard gameBoard;
 	private GamePrinter printedGame;
