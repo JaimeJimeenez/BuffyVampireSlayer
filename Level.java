@@ -16,27 +16,17 @@ public enum Level {
 		this.dim_y = dim_y;
 	}
 
-	//Getter
-	public String getName() {
-		return name;
-	}
+	// Get Methods
+	public String getName() { return name; }
 	
-	public int getNumberOfVampires() {
-		return numberOfVampires;
-	}
+	public int getNumberOfVampires() { return numberOfVampires; }
 	
-	public double getVampireFrequency() {
-		return vampireFrequency;
-	}
+	public double getVampireFrequency() { return vampireFrequency; }
 	
-	public int getDim_x() {
-		return dim_x;
-	}
+	public int getDim_x() { return dim_x; }
 	
-	public int getDim_y() {
-		return dim_y;
-	}
-	
+	public int getDim_y() { return dim_y; }
+
     public static Level parse(String inputString) {
         for (Level level : Level.values())
             if (level.name().equalsIgnoreCase(inputString)) 

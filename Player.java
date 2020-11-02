@@ -4,23 +4,16 @@ import java.util.Random;
 
 public class Player {
 	
-	public final Random rand = new Random();
+	public static final Random rand = new Random();
+
+	public Player() { coins = 50; }
 	
-	public Player() {
-		coins = 50;
-	}
+	public int getCoins() { return coins; }
 	
-	public int getCoins() {
-		return coins;
-	}
+	public void boughtSlayer() { coins -= 50; }
 	
-	public void setCoins() {
-		coins -= 50;
-	}
-	
-	public void updateCoins() {
-		if (rand.nextBoolean()) coins += 10;
-	}
+	public void updateCoins() { if (rand.nextFloat() >= 0.5) coins += 10; }
 	
 	private int coins;
+	
 }

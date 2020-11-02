@@ -11,26 +11,21 @@ public class GamePrinter {
 	String[][] board;
 	final String space = " ";
 	
-	public GamePrinter (Game game, int cols, int rows) {
+	public GamePrinter (Game game, int rows, int cols) {
 		this.game = game;
 		this.numRows = rows;
 		this.numCols = cols;
-		
 	}
 	
 	private void encodeGame(Game game) {
+		this.board = new String [numRows] [numCols];
 		
-		System.out.println("Number of cycles: " +(game.getCycles()));
-		System.out.println("Coins: " +game.getPlayer().getCoins());
-		game.dataVampires();
-		
-		this.board = new String[numRows][numCols];
+		game.getData();
 		for (int i = 0; i < numRows; i++) {
 			for (int j = 0; j < numCols; j++) {
-				board[i][j] = game.getPositionToString(i, j);
+				board[i][j] = game.getPositionToString( i, j );
 			}
 		}
-		
 	}
 	
 	 public String toString() {
@@ -67,3 +62,4 @@ public class GamePrinter {
 		return str.toString();
 	    }
 }
+

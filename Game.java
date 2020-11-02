@@ -1,114 +1,86 @@
 package logic;
 
-import java.util.Random;
-import view.GamePrinter;
 import characters.*;
+import view.GamePrinter;
 
 public class Game {
 
-	public static final Random rand = new Random();
-	
 	public Game(Long seed, Level level) {
 		
 		this.seed = seed;
 		this.level = level;
-		end = false;
+		this.gameBoard = new GameObjectBoard(level);
+		printedGame = new GamePrinter(this, level.getDim_y(), level.getDim_x());
+		
 		cycles = 1;
-		this.player = new Player();
-		printedGame = new GamePrinter(this, setDim_x(), setDim_y());
-		gameBoard = new GameObjectBoard(level);
-	}
-	
-	//SET DIMENSIONS
-	public int setDim_x() {
-		return level.getDim_x();
-	}
-	
-	public int setDim_y() {
-		return level.getDim_y();
-	}
-	
-	//SET EXIT
-	public void setEnd(boolean end) {
-		this.end = end;
-	}
-	
-	//Getters
-	public Long getSeed() {
-		return seed;
-	}
-	
-	public Level getLevel() {
-		return level;
-	}
-	
-	public boolean getEnd() {
-		return end;
-	}
-	
-	public int getCycles() {
-		return cycles;
-	}
-	
-	public Player getPlayer() {
-		return player;
-	}
-	
-	public GameObjectBoard getGameObjectBoard() {
-		return gameBoard;
-	}
-	
-	public String getPositionToString(int i, int j) {
+		player = new Player();
 		
-		for (Vampire elem : gameBoard.getVampires().getData())
-			if (elem != null && elem.isInPosition(j, i)) return elem.toString();
-		
-		
-		for (Slayer elem : gameBoard.getSlayers().getData()) 
-			if (elem != null && elem.isInPosition(j, i)) return elem.toString();
-
-		return " - ";
-	 }
-	
-	public void updateCycles() {
-		cycles++;
+		end = false;
 	}
 	
-	public void addSlayer(int dim_x, int dim_y) {
-		
-		if (player.getCoins() >= 50 && gameBoard.checkPosition(dim_x, dim_y)) {
-				gameBoard.fillSlayers(dim_x - 1, dim_y - 1);
-				player.setCoins();
-		}
-		else System.out.println("Error: Can not add the Slayer requested.");
-		
+	public Long getSeed() { return seed; }
+	
+	public Level getLevel() { return level; }
+	
+	public int getCycles() { return cycles; }
+	
+	public Player getPlayer() { return player; }
+	
+	public boolean getEnd() { return end; }
+	
+	public void setEnd(boolean end) { this.end = end; }
+	
+	public void getData() {
+		System.out.println("Number of cycles: " + cycles);
+		System.out.println("Coins: " + player.getCoins());
+		gameBoard.getVampireList().dataVampires();
 	}
+	
+	public void addSlayer(int dim_x, int dim_y) { 
+		gameBoard.fillSlayer(dim_x - 1, dim_y - 1); 
+		player.boughtSlayer();
+	}
+	
+	
+	public void updateCycles() { cycles++; }
 	
 	public void update() {
 		
 		gameBoard.advance();
-		if (gameBoard.addVampire()) gameBoard.fillVampires();
-		player.updateCoins();
 		gameBoard.attack();
+		if (gameBoard.addVampire()) gameBoard.fillVampire();
+		player.updateCoins();
 		gameBoard.removeDeadObjects();
-		gameBoard.updateVampireCycles();
+		checkEnd();
+		gameBoard.getVampireList().updateVampireCycles();
+	}
+	
+	public String getPositionToString(int i, int j) {
+		
+		for (Vampire elem : gameBoard.getVampireList().getData()) {
+			if (elem != null && elem.isInPosition( j, i )) return elem.toString();
+		}
+		
+		for (Slayer elem : gameBoard.getSlayerList().getData()) {
+			if (elem != null && elem.isInPosition( j,  i )) return  elem.toString();
+		}
+		
+		return " - ";
+	}
+	
+	public void checkEnd() {
 		end = gameBoard.checkEnd();
 	}
 	
-	public void dataVampires() {
-		gameBoard.dataVampires();
-	}
+	public String toString() { return printedGame.toString(); }
 	
-	public String toString() {
-		return printedGame.toString();
-	}
-
+	//Attributes
 	private Long seed;
 	private Level level;
-	private boolean end;
+	private GameObjectBoard gameBoard;
+	private GamePrinter printedGame;
+	
 	private int cycles;
 	private Player player;
-	private GamePrinter printedGame;
-	private GameObjectBoard gameBoard;
-	
+	private boolean end;
 }

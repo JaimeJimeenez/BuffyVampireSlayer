@@ -1,103 +1,46 @@
 package logic;
 
-import java.util.Random;
-
 import characters.*;
 
 public class GameObjectBoard {
 	
-	public static final Random rand = new Random();
-	
 	public GameObjectBoard(Level level) {
+		this.level = level;
 		this.vampireList = new VampireList(level.getNumberOfVampires());
 		this.slayerList = new SlayerList();
-		this.level = level;
 		numberOfSlayers = 0;
-		numberOfVampires = 0;
 	}
 	
-	public VampireList getVampires() {
-		return vampireList;
-	}
+	public VampireList getVampireList() { return vampireList; }
 	
-	public SlayerList getSlayers() {
-		return slayerList;
-	}
+	public SlayerList getSlayerList() { return slayerList; }
 	
 	public boolean checkPosition(int dim_x, int dim_y) {
 		
 		for (Slayer elem : slayerList.getData()) {
-			if (elem != null && elem.isInPosition(dim_x, dim_y)) {
-					System.out.println("Error: A Slayer is already in that position.");
-					return false;
-			}
+			if (elem != null && elem.isInPosition(dim_x, dim_x)) return false;
 		}
 		
 		for (Vampire elem : vampireList.getData()) {
-			if (elem != null && elem.isInPosition(dim_x, dim_y)) {
-					System.out.println("Error: A Vampire is already in that position.");
-					return false;
-				}
-			}
+			if (elem != null && elem.isInPosition(dim_x, dim_y)) return false; 
+		}
 		
 		return true;
 	}
 	
-	public boolean addVampire() {
-		return (rand.nextDouble() < level.getVampireFrequency());
-	}
-	
-	public VampireList fillVampires() {
-		Vampire newVampire = new Vampire(level);
-		
-		for (Slayer elem : slayerList.getData()) {
-			if (elem != null && elem.isInPosition(newVampire.getDim_x(), newVampire.getDim_y())) return vampireList;
-		}
-		
-		for (Vampire elem : vampireList.getData()) {
-			if (elem != null && elem.isInPosition(newVampire.getDim_x(), newVampire.getDim_y())) return vampireList;
-		}
-		
-		if (numberOfVampires < level.getNumberOfVampires()) {
-			vampireList.getData()[numberOfVampires] = newVampire;
-			numberOfVampires++;
-		}
-		
-		return vampireList;
-	}
-	
-	public void dataVampires() {
-		int onBoard = 0;
-		int remaining = 0;
-		
-		for (Vampire elem : vampireList.getData()) {
-			if (elem == null) remaining++;
-			if (elem != null && elem.getHealth() != 0) onBoard++;
-		}
-		
-		System.out.println("Remaining vampires: " +remaining);
-		System.out.println("Vampires on board: " +onBoard);
-		
-	}
-	
-	public SlayerList fillSlayers(int dim_x, int dim_y) {
+	public void fillSlayer(int dim_x, int dim_y) {
 		Slayer newSlayer = new Slayer(dim_x, dim_y);
 		
 		slayerList.getData()[numberOfSlayers] = newSlayer;
 		numberOfSlayers++;
 		
-		return slayerList;
 	}
 	
 	public void advance() {
-		for (Vampire eachVampire: vampireList.getData()) 
-			for (Slayer eachSlayer : slayerList.getData()) {
-				if (eachVampire != null && eachSlayer != null && !eachSlayer.isInPosition(eachVampire.getDim_x() - 1, eachVampire.getDim_y()) && eachVampire.getCycles() % 2 == 0) eachVampire.updateDim_x(eachVampire.getDim_x() - 1);
-			}
-	}
-	
-	public void updateVampireCycles() {
-		for (Vampire elem : vampireList.getData())  if (elem != null) elem.setCycles();
+		
+		for (Vampire elem : vampireList.getData())
+			if (elem != null && checkPosition(elem.getDim_x() - 1, elem.getDim_y()) && elem.getCycles() % 2 == 0) elem.updateDim_x();
+		
 	}
 	
 	public void attack() {
@@ -105,7 +48,7 @@ public class GameObjectBoard {
 		for (Slayer eachSlayer : slayerList.getData()) {
 			for (Vampire eachVampire : vampireList.getData()) {
 				if (eachSlayer != null && eachVampire != null) {
-					if (eachSlayer.getDim_y() == eachVampire.getDim_y()) eachVampire.setHealth(eachVampire.getHealth() - 1);
+					if (eachSlayer.getDim_y() == eachVampire.getDim_y()) eachVampire.updateHealth();
 				}
 			}	
 		}
@@ -113,55 +56,104 @@ public class GameObjectBoard {
 		for (Vampire eachVampire : vampireList.getData()) {
 			for (Slayer eachSlayer : slayerList.getData()) {
 				if (eachSlayer != null && eachVampire != null) {
-					if (eachSlayer.getDim_y() == eachVampire.getDim_y() && eachSlayer.getDim_x() + 1 == eachVampire.getDim_x()) eachSlayer.setHealth(eachSlayer.getHealth() - 1);
+					if (eachSlayer.getDim_y() == eachVampire.getDim_y() && eachSlayer.getDim_x() + 1 == eachVampire.getDim_x()) eachSlayer.updateHealth();
 				}
 			}
 		}
 	}
 	
-	public SlayerList removeSlayer(int i) {
-		System.arraycopy(slayerList.getData(), i + 1, slayerList.getData()[i], i, slayerList.getData().length - 1  - i);
-		return slayerList;
-	}
+	public boolean addVampire() { return Player.rand.nextDouble() < level.getVampireFrequency(); }
 	
-	//Remaining
-	public void removeDeadObjects() {
-		
-		for (int i  = 0; i < vampireList.getData().length; i++) {
-			if (vampireList.getData()[i] != null && vampireList.getData()[i].getHealth() == 0) vampireList.setData(vampireList.removeVampire(i));
-		}
-		
-		for (int i = 0; i < slayerList.getData().length; i++) {
-			if (slayerList.getData()[i] != null && slayerList.getData()[i].getHealth() == 0) this.slayerList = removeSlayer(i);
-		}
-		
-	}
-
-	public boolean checkEnd() {
-		int cont = 0;
+	public VampireList fillVampire() {
+		Vampire newVampire = new Vampire (level);
 		
 		for (Vampire elem : vampireList.getData()) {
-			
+			if (elem != null && elem.isInPosition(newVampire.getDim_x(), newVampire.getDim_y())) return vampireList;
+		}
+		
+		for (Slayer elem : slayerList.getData()) {
+			if (elem != null && elem.isInPosition(newVampire.getDim_x(), newVampire.getDim_x())) return vampireList;
+		}
+		
+		for (int i = 0; i < vampireList.getLength(); i++) {
+			if (vampireList.at(i) == null) { 
+				vampireList.getData()[i] = newVampire; 
+				break;
+			}
+		}
+		
+		return vampireList;
+	}
+	
+	public void removeVampires(int counterDeads) {
+		VampireList newVampireList = new VampireList(vampireList.getLength() - counterDeads);
+		int i = 0;
+		
+		for (Vampire elem : vampireList.getData()) {
+			if (elem != null && elem.getHealth() != 0) {
+				newVampireList.getData()[i] = elem;
+				i++;
+			}
+		}
+		
+		vampireList = newVampireList;
+		
+	}
+	
+	public void removeSlayers() {
+		SlayerList newSlayerList = new SlayerList();
+		int i = 0;
+		
+		for (Slayer elem : slayerList.getData()) 
+			if (elem != null && elem.getHealth() != 0) {
+				newSlayerList.getData()[i] = elem;
+				i++;
+			}
+		
+		slayerList = newSlayerList;
+	
+	}
+	
+	public void removeDeadObjects() {
+		int counterDeads = 0;
+		int aux = counterDeads;
+		
+		for (Vampire elem : vampireList.getData()) {
+			if (elem != null && elem.getHealth() <= 0) counterDeads++;
+		}
+		
+		if (counterDeads != 0 && aux != counterDeads) {
+			removeVampires(counterDeads);
+			aux = counterDeads;
+		}
+		
+		removeSlayers();
+		
+	}
+	
+	public boolean checkEnd() {
+		
+		for (Vampire elem : vampireList.getData()) {
 			if (elem != null) {
-				if (elem.getHealth() == 0) cont++;
 				if (elem.getDim_x() == 0) {
-					System.out.println("You loose.");
+					System.out.println("Vampires win."); 
 					return true;
 				}
 			}
+			
 		}
 		
-		if (cont == level.getNumberOfVampires()) {
-			System.out.println("You win");
+		if (vampireList.getLength() == 0) {
+			System.out.println("Player wins");
 			return true;
 		}
 		
 		return false;
 	}
 	
+	//Attributes
+	private Level level;
 	private VampireList vampireList;
 	private SlayerList slayerList;
-	private Level level;
 	private int numberOfSlayers;
-	private int numberOfVampires;
 }
