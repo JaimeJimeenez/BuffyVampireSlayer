@@ -2,9 +2,7 @@ package characters;
 
 public class VampireList {
 
-	public VampireList(int numberOfVampires) {
-		data = new Vampire[numberOfVampires];
-	}
+	public VampireList(int numberOfVampires) { data = new Vampire[numberOfVampires]; }
 	
 	public Vampire[] getData() { return data; }
 	
