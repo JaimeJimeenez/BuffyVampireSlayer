@@ -25,7 +25,7 @@ public class Slayer {
 	
 	public boolean isInPosition(int dim_x, int dim_y) { return (this.dim_x == dim_x && this.dim_y == dim_y); }
 	
-	public String toString() { return "S[ "+ health + " ]"; }
+	public String toString() { return "S ["+ health + "]"; }
 	
 	
 	//Attributes

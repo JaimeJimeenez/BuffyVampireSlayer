@@ -7,12 +7,12 @@ public class Game {
 	
 	public Game(Long seed, Level level) {
 		
-		this.seed = seed;
+		Game.seed = seed;
 		this.level = level;
 		this.gameBoard = new GameObjectBoard(level);
 		printedGame = new GamePrinter(this, level.getDim_y(), level.getDim_x());
 		
-		cycles = 1;
+		cycles = 0;
 		player = new Player();
 		
 		end = false;
@@ -31,13 +31,15 @@ public class Game {
 	public void setEnd(boolean end) { this.end = end; }
 	
 	public void getData() {
+		
 		System.out.println("Number of cycles: " + cycles);
 		System.out.println("Coins: " + player.getCoins());
 		gameBoard.getVampireList().dataVampires();
+		
 	}
 	
 	public void addSlayer(int dim_x, int dim_y) { 
-		gameBoard.fillSlayer(dim_x - 1, dim_y - 1); 
+		gameBoard.fillSlayer(dim_x, dim_y); 
 		player.boughtSlayer();
 	}
 	
@@ -65,7 +67,7 @@ public class Game {
 			if (elem != null && elem.isInPosition( j,  i )) return  elem.toString();
 		}
 		
-		return " - ";
+		return "  ";
 	}
 	
 	public void checkEnd() {

@@ -14,7 +14,7 @@ public class Player {
 	
 	public void boughtSlayer() { coins -= 50; }
 	
-	public void updateCoins() { if (rand.nextFloat() >= 0.5) coins += 10; }
+	public void updateCoins() { if (Player.rand.nextFloat() >= 0.5) coins += 10; }
 	
 	private int coins;
 	

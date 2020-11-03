@@ -28,11 +28,11 @@ public class Controller {
 	    this.scanner = scanner;
     }
     
-    public void  printGame() {
-   	 System.out.println(game);
-   }
+    public void  printGame() { System.out.println(game); }
     
     public void run() {
+    	
+    	printGame();
     	
     	while (!game.getEnd()) {
     		
@@ -40,36 +40,39 @@ public class Controller {
     		String order;
     		int aux = game.getCycles();
     		
-    		printGame();
     		System.out.print(prompt);
     		
     		command = scanner.nextLine();
     		String dim[] = command.split(" ");
     		order = dim[0];
     		
+    		System.out.println("[DEBUG] Executing: " + order);
+    		
     		switch (order) {
     		
+    		case "Add":
     		case "a":
     		case "add":
     			int dim_x = Integer.parseUnsignedInt(dim[1]);
     			int dim_y = Integer.parseUnsignedInt(dim[2]);
     			
-    			if (dim_x > game.getLevel().getDim_x() - 1 || dim_x <= 0 || dim_y > game.getLevel().getDim_y() || dim_y <= 0) System.out.println(invalidPositionMsg);
+    			if (dim_x >= game.getLevel().getDim_x() - 1 || dim_x < 0 || dim_y > game.getLevel().getDim_y() - 1 || dim_y < 0) System.out.println("[ERROR]: " + invalidPositionMsg);
     			else if (game.getPlayer().getCoins() >= 50) {
     				game.addSlayer(dim_x, dim_y);
     				game.updateCycles();
     			}
-    			else System.out.println("Error: The player doesn't have enough coins.");
+    			else System.out.println("[ERROR]: Not enough coins");
     			
     			break;
     			
     		case "h":
-    		case "help": System.out.println(helpMsg);
-    		break;
+    		case "help": 
+    			System.out.println(helpMsg);
+    			break;
     		
     		case "r":
     		case "reset":
-    			Controller newController = new Controller(new Game(game.getSeed(), game.getLevel()), new Scanner(System.in));
+    			Controller newController = new Controller(new Game(Game.getSeed(), game.getLevel()), new Scanner(System.in));
     			newController.run();
     			break;
     			
@@ -78,16 +81,20 @@ public class Controller {
     			System.out.println("Game Ended.");
     			game.setEnd(true);
     			break;
-    			
+    		
+    		case "":
     		case "n":
     		case "none": game.updateCycles();
     		break;
     		
-    		default: System.out.println(unknownCommandMsg);
+    		default: System.out.println("[ERROR]: " + unknownCommandMsg);
     		
     		}
     		
-    		if (aux != game.getCycles()) game.update();
+    		if (aux != game.getCycles()) {
+    			game.update();
+    			printGame();
+    		}
     		
     	}
     }

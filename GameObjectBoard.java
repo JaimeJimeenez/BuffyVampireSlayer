@@ -56,7 +56,7 @@ public class GameObjectBoard {
 		for (Vampire eachVampire : vampireList.getData()) {
 			for (Slayer eachSlayer : slayerList.getData()) {
 				if (eachSlayer != null && eachVampire != null) {
-					if (eachSlayer.getDim_y() == eachVampire.getDim_y() && eachSlayer.getDim_x() + 1 == eachVampire.getDim_x()) eachSlayer.updateHealth();
+					if (eachSlayer.getDim_y() == eachVampire.getDim_y() && eachSlayer.getDim_x() + 1 == eachVampire.getDim_x() && eachVampire.getHealth() != 0) eachSlayer.updateHealth();
 				}
 			}
 		}
@@ -136,7 +136,7 @@ public class GameObjectBoard {
 		for (Vampire elem : vampireList.getData()) {
 			if (elem != null) {
 				if (elem.getDim_x() == 0) {
-					System.out.println("Vampires win."); 
+					System.out.println("Vampires win!."); 
 					return true;
 				}
 			}
@@ -144,7 +144,7 @@ public class GameObjectBoard {
 		}
 		
 		if (vampireList.getLength() == 0) {
-			System.out.println("Player wins");
+			System.out.println("Player wins!");
 			return true;
 		}
 		
