@@ -1,35 +1,21 @@
 package view;
 
-import logic.Game;
 import utils.MyStringUtils;
 
 public class GamePrinter {
 	
-	Game game;
+	IPrintable printable;
 	int numRows; 
 	int numCols;
-	String[][] board;
 	final String space = " ";
 	
-	public GamePrinter (Game game, int rows, int cols) {
-		this.game = game;
+	public GamePrinter (IPrintable printable, int cols, int rows) {
+		this.printable = printable;
 		this.numRows = rows;
-		this.numCols = cols;
-	}
-	
-	private void encodeGame(Game game) {
-		this.board = new String [numRows] [numCols];
-		
-		game.getData();
-		for (int i = 0; i < numRows; i++) {
-			for (int j = 0; j < numCols; j++) {
-				board[i][j] = game.getPositionToString( i, j );
-			}
-		}
+		this.numCols = cols;	
 	}
 	
 	 public String toString() {
-		encodeGame(game);
 		int cellSize = 7;
 		int marginSize = 2;
 		String vDelimiter = "|";
@@ -51,15 +37,14 @@ public class GamePrinter {
 		StringBuilder str = new StringBuilder();
 
 		str.append(lineEdge);
-		for(int i=0; i<numRows; i++) {
+		for(int i = 0; i < numRows; i++) {
 		        str.append(margin).append(vDelimiter);
-		        for (int j=0; j<numCols; j++)
-		            str.append( MyStringUtils.centre(board[i][j], cellSize)).append(vDelimiter);
+		        for (int j=0; j < numCols; j++)
+		            str.append( MyStringUtils.centre(printable.getPositionToString(j, i), cellSize)).append(vDelimiter);
 		        if (i != numRows - 1) str.append(lineDelimiter);
 		        else str.append(lineEdge);   
 		}
 
-		return str.toString();
+		return printable.getInfo() + str.toString();
 	    }
 }
-
