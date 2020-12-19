@@ -4,12 +4,13 @@ import logic.Game;
 
 public class HelpCommand extends Command{
 
+	private static String name = "help";
+	private static String shortcut = "h";
+	private static String details = "[h]elp";
+	private static String help = "show this help";
+	
 	public HelpCommand() {
-		super("help", "h", "[h]elp", "show this help");
-		HelpCommand.name = super.name;
-		HelpCommand.shortcut = super.shortcut;
-		HelpCommand.details = "[h]elp";
-		HelpCommand.help = "show this help";
+		super(name, shortcut, details, help);
 	}
 	
 	public String helpText() { return super.helpText(); }
@@ -23,8 +24,4 @@ public class HelpCommand extends Command{
 	
 	public Command parse(String[] commandWords) { return parseNoParamsCommand(commandWords); }
 	
-	private static String name;
-	private static String shortcut;
-	private static String details;
-	private static String help;
 }

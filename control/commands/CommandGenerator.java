@@ -29,6 +29,10 @@ public class CommandGenerator {
 			new ResetCommand(),
 			new ExitCommand(),
 			new UpdateCommand(),
-			
+			new GarlicPushCommand(),
+			new LightFlashCommand(),
+			new AddBloodBankCommand(),
+			new SuperCoinsCommand(),
+			new AddVampireCommand(),
 	};
 }

@@ -4,12 +4,13 @@ import logic.Game;
 
 public class UpdateCommand extends Command{
 
+	private static String name = "none";
+	private static String shortcut = "n";
+	private static String details = "[n]one | []";
+	private static String help = "update";
+	
 	public UpdateCommand() {
-		super ("none", "n", "[n]one | []", "update");
-		UpdateCommand.name = super.name;
-		UpdateCommand.shortcut = super.shortcut;
-		UpdateCommand.details = "[n]one";
-		UpdateCommand.help = "update";
+		super (name, shortcut, details, help);
 	}
 	
 	public String helpText() { return super.helpText(); }
@@ -25,9 +26,4 @@ public class UpdateCommand extends Command{
 		if (commandWords[0].equals(name) || commandWords[0].equals(shortcut) || commandWords[0].equals("")) return this;
 		return null;
 	}
-	
-	private static String name;
-	private static String shortcut;
-	private static String details;
-	private static String help;
 }

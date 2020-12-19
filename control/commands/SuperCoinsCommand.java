@@ -2,26 +2,28 @@ package control.commands;
 
 import logic.Game;
 
-public class ExitCommand extends Command{
+public class SuperCoinsCommand extends Command {
 
-	private static String name = "exit";
-	private static String shortcut = "e";
-	private static String details = "[e]xit";
-	private static String help = "exit game";
+	private static String name = "coins";
+	private static String shortcut = "c";
+	private static String details = "[c]oins";
+	private static String help = "add 1000 coins";
 	
-	public ExitCommand() {
+	public SuperCoinsCommand() {
 		super(name, shortcut, details, help);
 	}
-
+	
 	public String helpText() { return super.helpText(); }
 	
 	@Override
 	public boolean execute(Game game) {
-		game.exitGame();
-		return false;
+		
+		game.addCoins();
+		return true;
 	}
-
+	
 	@Override
 	public Command parse(String[] commandWords) { return parseNoParamsCommand(commandWords); }
-
+	
+	
 }

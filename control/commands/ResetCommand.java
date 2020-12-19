@@ -4,12 +4,13 @@ import logic.Game;
 
 public class ResetCommand extends Command{
 
+	private static String name = "reset";
+	private static String shortcut = "r";
+	private static String details = "[r]eset";
+	private static String help = "reset game";
+	
 	public ResetCommand() {
-		super("reset", "r", "[r]eset", "reset game");
-		ResetCommand.name = super.name;
-		ResetCommand.shortcut = super.shortcut;
-		ResetCommand.details = "[r]eset";
-		ResetCommand.help = "reset game";
+		super(name, shortcut, details, help);
 	}
 	
 	public String helpText() { return super.helpText(); }
@@ -23,8 +24,4 @@ public class ResetCommand extends Command{
 	@Override
 	public Command parse(String[] commandWords) { return parseNoParamsCommand(commandWords); }
 	
-	private static String name;
-	private static String shortcut;
-	private static String details;
-	private static String help;
 }

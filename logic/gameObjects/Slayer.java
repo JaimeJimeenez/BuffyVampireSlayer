@@ -1,10 +1,18 @@
 package logic.gameObjects;
 
+import logic.Game;
+
 public class Slayer extends GameObject {
 	
-	public Slayer() {
-		setHealth(3);
-		setGame(game);
+	public final static int COST = 50;
+	public final String SYMBOL = "S";
+	public final int HEALTH = 3;
+	
+	public Slayer(int pos_x, int pos_y, Game game) {
+		super(pos_x, pos_y, game);
+		
+		symbol = SYMBOL;
+		health = HEALTH;
 	}
 	
 	@Override
@@ -12,9 +20,14 @@ public class Slayer extends GameObject {
 	}
 	
 	@Override
+	public boolean receiveDraculaFlash() {
+		setHealth(0);
+		return true;
+	}
+	
+	@Override
 	public boolean receiveVampireAttack(int damage) {
 		health -= damage;
-		if (health <= 0) game.removeDeadObjects();
 		return true;
 	}
 	
@@ -33,7 +46,4 @@ public class Slayer extends GameObject {
 		}
 		
 	}
-	
-	public String toString() { return "S ["+ health + "]"; } 
-	
 }

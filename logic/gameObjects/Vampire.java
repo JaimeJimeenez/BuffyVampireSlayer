@@ -1,20 +1,40 @@
 package logic.gameObjects;
 
+import logic.Level;
+import logic.Game;
+
 public class Vampire extends GameObject{
 	
 	public static int onBoard;
 	public static int remaining;
 	public static boolean hasArrived;
+	public final int HEALTH = 5;
+	public final String SYMBOL = "V";
 	
-	public Vampire() {
-		setHealth(5);
-		setGame(game);
-		this.cycles = 0;
+	
+	public static final String noRemaining = "[ERROR]: No more remaining vampires left";
+	
+	public Vampire(int pos_x, int pos_y, Game game) {
+		super(pos_x, pos_y, game);
+		
+		symbol = SYMBOL;
+		health = HEALTH;
+		cycles = 0;
+		updateVampireData();
 	}
 	
-	public static void initVampireData() {
+	public static boolean isFinished() { return (onBoard == 0 && remaining == 0) || hasArrived == true; }
+	
+	public static void initVampireData(Level level) {
 		onBoard = 0;
+		remaining = level.getNumberOfVampires();
 		hasArrived = false;
+		Dracula.isAlive = false;
+	}
+	
+	public static void updateVampireData() {
+		onBoard++;
+		remaining--;
 	}
 	
 	public boolean checkCycles() { return (cycles % 2 == 0 && cycles != 0); }
@@ -29,12 +49,29 @@ public class Vampire extends GameObject{
 	}
 	
 	@Override
-	public boolean receiveSlayerAttack(int damage) { 
-		health -= damage;
-		if (health <= 0) {
-			game.removeDeadObjects();
+	public boolean receiveGarlicPush() {
+		
+		pos_x++;
+		cycles--;
+		if (pos_x == game.getDim_X()) {
+			setHealth(0);
 			Vampire.onBoard--;
 		}
+		
+		return true;
+	}
+	
+	@Override
+	public boolean receiveLightFlash() {
+		setHealth(0);
+		Vampire.onBoard--;
+		return true;
+	}
+	
+	@Override
+	public boolean receiveSlayerAttack(int damage) { 
+		health -= damage;
+		if (!isAlive()) Vampire.onBoard--;
 		return true; 	
 	}
 	
@@ -52,7 +89,6 @@ public class Vampire extends GameObject{
 		
 	}
 	
-	public String toString() { return "V [" + health + "]"; }
-	
-	private int cycles;
+	protected int cycles;
+
 }

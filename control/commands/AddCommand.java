@@ -1,27 +1,22 @@
 package control.commands;
 
-import control.Controller;
 import logic.Game;
 
 public class AddCommand extends Command{
 
+	private static String name = "add";
+	private static String shortcut = "a";
+	private static String details = "[a]dd <x> <y>";
+	private static String help = "add a slayer in position x, y";
+	
 	public AddCommand() {
-		super("add", "a", "[a]dd <x> <y>", "add a slayer in position x, y");
-		AddCommand.name = super.name;
-		AddCommand.shortcut = super.shortcut;
-		AddCommand.details = "[a]dd";
-		AddCommand.help = "add slayer in positionx, y";
+		super(name, shortcut, details, help);
 	}
 	
 	public String helpText() { return super.helpText(); }
 	
 	@Override
 	public boolean execute(Game game) {
-		
-		if (pos_x < 0 || pos_y < 0) {
-			System.out.println(Controller.invalidPositionMsg);
-			return false;
-		}
 		
 		if (game.addSlayer(pos_x, pos_y)) {
 			game.update();
@@ -34,7 +29,7 @@ public class AddCommand extends Command{
 	@Override
 	public Command parse(String[] commandWords) {
 
-		if (commandWords[0].equals(name) || commandWords[0].equals(shortcut)) {
+		if (commandWords[0].equals(name) || commandWords[0].equals(shortcut) && commandWords.length == 3) {
 			pos_x = Integer.parseInt(commandWords[1]);
 			pos_y = Integer.parseInt(commandWords[2]);
 			return this;
@@ -42,10 +37,6 @@ public class AddCommand extends Command{
 		return null;
 	}
 	
-	private static String name;
-	private static String shortcut;
-	private static String details;
-	private static String help;
 	private int pos_x;
 	private int pos_y;
 }
