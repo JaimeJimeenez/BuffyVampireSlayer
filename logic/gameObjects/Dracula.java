@@ -14,7 +14,7 @@ public class Dracula extends Vampire {
 		
 		symbol = SYMBOL;
 		health = HEALTH;
-		cycles = 0;
+		cycles = 2;
 		isAlive = true;
 	}
 	

@@ -19,7 +19,7 @@ public class Vampire extends GameObject{
 		
 		symbol = SYMBOL;
 		health = HEALTH;
-		cycles = 0;
+		cycles = 2;
 		updateVampireData();
 	}
 	
@@ -37,13 +37,14 @@ public class Vampire extends GameObject{
 		remaining--;
 	}
 	
-	public boolean checkCycles() { return (cycles % 2 == 0 && cycles != 0); }
-	
 	@Override
-	protected void updatePosition() {
+	public void updatePosition() {
 		
-		cycles++;
-		if (game.isPositionEmpty(pos_x - 1, pos_y) && checkCycles()) pos_x--;
+		cycles--;
+		if (game.isPositionEmpty(pos_x - 1, pos_y) && cycles <= 0) {
+			pos_x--;
+			cycles = 2;
+		}
 		if (pos_x == -1) Vampire.hasArrived = true;
 		
 	}
@@ -52,7 +53,6 @@ public class Vampire extends GameObject{
 	public boolean receiveGarlicPush() {
 		
 		pos_x++;
-		cycles--;
 		if (pos_x == game.getDim_X()) {
 			setHealth(0);
 			Vampire.onBoard--;
@@ -81,14 +81,13 @@ public class Vampire extends GameObject{
 		if (isAlive()) {
 			IAttack other = game.getAttackableInPosition(pos_x - 1, pos_y);
 			
-			if (other != null) {
-				other.receiveVampireAttack(HARM);
-				cycles--;
-			}
+			if (other != null) other.receiveVampireAttack(HARM);
 		}
 		
 	}
 	
+	@Override
+	public String getInfo() { return symbol + ";" + pos_x + ";" +  pos_y + ";" +  health + ";" +  cycles; }
+	
 	protected int cycles;
-
 }

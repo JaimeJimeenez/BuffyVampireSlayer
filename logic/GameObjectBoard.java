@@ -1,6 +1,7 @@
 package logic;
 
 import logic.gameObjects.*;
+import logic.lists.GameObjectList;
 
 public class GameObjectBoard {
 	
@@ -19,9 +20,11 @@ public class GameObjectBoard {
 	public void update(Game game) {
 		objectList.advance();
 		objectList.attack();
-		game.addRandomVampires();
+		game.addVampiresIf(); 
 		objectList.removeDeadObjects();
 	}
+	
+	public String getListInfo() { return objectList.getListInfo(); }
 	
 	public boolean isPositionEmpty(int pos_x, int pos_y) { return objectList.isPositionEmpty(pos_x, pos_y); }
 	

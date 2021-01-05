@@ -1,6 +1,10 @@
 package control.commands;
 
 import logic.Game;
+import logic.gameObjects.Player;
+import exceptions.CommandParseException;
+import exceptions.NotEnoughCoinsException;
+
 
 public class LightFlashCommand extends Command{
 	
@@ -16,16 +20,17 @@ public class LightFlashCommand extends Command{
 	public String helpText() { return super.helpText(); }
 	
 	@Override
-	public boolean execute(Game game) {
+	public boolean execute(Game game) throws NotEnoughCoinsException {
 		
-		if (game.eraseVampires()) {
-			game.update();
+		if (game.canPlayerBuy(Player.VALUE_LIGHT)) {
+			game.eraseVampires();
 			return true;
 		}
-		return false;
+		
+		throw new NotEnoughCoinsException("Not enough coins");
 	}
 	
 	@Override
-	public Command parse(String[] commandWords) { return parseNoParamsCommand(commandWords); }
+	public Command parse(String[] commandWords) throws CommandParseException { return parseNoParamsCommand(commandWords); }
 	
 }

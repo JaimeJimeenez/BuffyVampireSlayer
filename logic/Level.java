@@ -16,6 +16,8 @@ public enum Level {
 		this.dim_y = dim_y;
 	}
 
+	public String getName() { return name.toUpperCase(); }
+	
 	public int getNumberOfVampires() { return numberOfVampires; }
 	
 	public double getVampireFrecuency() { return vampireFrequency; }

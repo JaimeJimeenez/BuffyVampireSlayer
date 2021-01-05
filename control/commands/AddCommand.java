@@ -1,6 +1,10 @@
 package control.commands;
 
 import logic.Game;
+import logic.gameObjects.Slayer;
+import exceptions.UnvalidPositionException;
+import exceptions.CommandExecuteException;
+import exceptions.NotEnoughCoinsException;
 
 public class AddCommand extends Command{
 
@@ -16,27 +20,38 @@ public class AddCommand extends Command{
 	public String helpText() { return super.helpText(); }
 	
 	@Override
-	public boolean execute(Game game) {
+	public boolean execute(Game game) throws CommandExecuteException {
 		
-		if (game.addSlayer(pos_x, pos_y)) {
-			game.update();
-			return true;
+		if (game.isPositionValid(x, y) && x < game.getDim_X() - 1) {
+			if (game.canPlayerBuy(Slayer.COST)) {
+				game.addSlayer(x, y);
+				game.update();
+				return true;
+			}
+			else throw new NotEnoughCoinsException("Not enough coins");
 		}
-		
-		return false;
+		else throw new UnvalidPositionException("Invalid position");
 	}
 	
 	@Override
 	public Command parse(String[] commandWords) {
 
-		if (commandWords[0].equals(name) || commandWords[0].equals(shortcut) && commandWords.length == 3) {
-			pos_x = Integer.parseInt(commandWords[1]);
-			pos_y = Integer.parseInt(commandWords[2]);
-			return this;
+		try {
+			if (commandWords[0].equals(name) || commandWords[0].equals(shortcut)) {
+				if (commandWords.length == 3) {
+					x = Integer.parseInt(commandWords[1]);
+					y = Integer.parseInt(commandWords[2]);
+					return this;
+				}
+			}
 		}
+		catch (NumberFormatException nfe) {
+			System.out.println("[ERROR]: Unvalid argument for add slayer command, number expected: " + details);
+		}
+		
 		return null;
 	}
 	
-	private int pos_x;
-	private int pos_y;
+	private int x;
+	private int y;
 }

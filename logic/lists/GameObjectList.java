@@ -1,6 +1,7 @@
-package logic.gameObjects;
+package logic.lists;
 
 import logic.*;
+import logic.gameObjects.*;
 import java.util.ArrayList;
 
 public class GameObjectList {
@@ -40,6 +41,15 @@ public class GameObjectList {
 			if (elem.isAlive()) returnArray.add(elem);
 		
 		objects = returnArray;
+	}
+	
+	public String getListInfo() {
+		StringBuilder returnInfo = new StringBuilder();
+		
+		for (GameObject elem : objects) 
+			returnInfo.append(elem.getInfo() + "\n");
+		
+		return returnInfo.toString();
 	}
 	
 	public boolean isFinished() { return Vampire.isFinished(); }

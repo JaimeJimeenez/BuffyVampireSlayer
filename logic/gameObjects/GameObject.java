@@ -12,7 +12,7 @@ abstract public class GameObject implements IAttack{
 		this.game = game;
 	}
 	
-	protected boolean isAlive() { return health > 0; }
+	public boolean isAlive() { return health > 0; }
 	
 	public int getPos_X() { return pos_x; }
 	
@@ -22,9 +22,11 @@ abstract public class GameObject implements IAttack{
 	
 	abstract public void attack();
 	
-	abstract protected void updatePosition();
+	abstract public void updatePosition();
 	
 	public boolean isInPosition(int pos_y, int pos_x) { return (this.pos_x == pos_x && this.pos_y == pos_y); } 
+	
+	abstract public String getInfo();
 	
 	public String toString() { return symbol + " [" + health + "]"; }
 	

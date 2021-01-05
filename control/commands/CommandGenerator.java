@@ -1,15 +1,19 @@
 package control.commands;
 
+import exceptions.CommandParseException;
+
 public class CommandGenerator {
 	
-	public static Command parse(String[] parameters) {
+	public static final String unknownCommandMsg = "Unknown command";
+	
+	public static Command parse(String[] parameters) throws CommandParseException {
 		
-		for (Command elem : availableCommands) {
-			Command parsedCommand = elem.parse(parameters);
+		for (Command commands : availableCommands) {
+			Command parsedCommand = commands.parse(parameters);
 			if (parsedCommand != null) return parsedCommand;
 		}
 		
-		return null;
+		throw new CommandParseException ("[ERROR]: " + unknownCommandMsg);
 	}
 	
 	public static String commandHelp() {
@@ -34,5 +38,7 @@ public class CommandGenerator {
 			new AddBloodBankCommand(),
 			new SuperCoinsCommand(),
 			new AddVampireCommand(),
+			new SaveCommand(),
+			new SerializeCommand(),
 	};
 }

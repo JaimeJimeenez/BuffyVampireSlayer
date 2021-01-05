@@ -16,7 +16,7 @@ public class Slayer extends GameObject {
 	}
 	
 	@Override
-	protected void updatePosition() {
+	public void updatePosition() {
 	}
 	
 	@Override
@@ -46,4 +46,6 @@ public class Slayer extends GameObject {
 		}
 		
 	}
+	
+	public String getInfo() { return symbol + ";" + pos_x + ";" +  pos_y + ";" + health; }
 }

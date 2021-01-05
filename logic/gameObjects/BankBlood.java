@@ -9,6 +9,7 @@ public class BankBlood extends Slayer {
 	public BankBlood(int pos_x, int pos_y, int imputCoins, Game game, Player player) {
 		super(pos_x, pos_y, game);
 		
+		symbol = "B";
 		health = HEALTH;
 		this.player = player;
 		this.imputCoins = imputCoins;
@@ -21,10 +22,20 @@ public class BankBlood extends Slayer {
 	}
 	
 	@Override
-	protected void updatePosition() { player.addBankCoins(imputCoins); }
+	public void attack() {
+		
+	}
+	
+	@Override
+	public void updatePosition() { player.addBankCoins(imputCoins); }
 
-	public String toString() { return "B [" + imputCoins + "]"; }
+	@Override
+	public String getInfo() { return symbol + ";" + pos_x + ";" + pos_y +  ";" + imputCoins + ";" + health; }
+	
+	@Override
+	public String toString() { return symbol + " [" + imputCoins + "]"; }
 	
 	private int imputCoins;
 	private Player player;
 }
+  

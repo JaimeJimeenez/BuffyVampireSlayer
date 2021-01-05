@@ -1,6 +1,10 @@
 package control.commands;
 
 import logic.Game;
+import logic.gameObjects.Player;
+import exceptions.CommandExecuteException;
+import exceptions.NotEnoughCoinsException;
+import exceptions.CommandParseException;
 
 public class GarlicPushCommand extends Command{
 
@@ -16,17 +20,19 @@ public class GarlicPushCommand extends Command{
 	public String helpText() { return super.helpText(); }
 	
 	@Override
-	public boolean execute(Game game) { 
+	public boolean execute(Game game) throws CommandExecuteException { 
 		
-		if (game.pushVampires()) {
+		if (game.canPlayerBuy(Player.VALUE_GARLIC)) {
+			game.pushVampires();
 			game.update();
 			return true;
 		}
-		return false;
+		
+		throw new NotEnoughCoinsException("Not enough coins");
 	}
 	
 	
 	@Override
-	public Command parse(String[] commandWords) { return parseNoParamsCommand(commandWords); }
+	public Command parse(String[] commandWords) throws CommandParseException { return parseNoParamsCommand(commandWords); }
 	
 }
