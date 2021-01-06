@@ -1,9 +1,7 @@
 package control.commands;
 
 import logic.Game;
-import logic.gameObjects.Player;
 import exceptions.CommandExecuteException;
-import exceptions.NotEnoughCoinsException;
 import exceptions.CommandParseException;
 
 public class GarlicPushCommand extends Command{
@@ -22,13 +20,18 @@ public class GarlicPushCommand extends Command{
 	@Override
 	public boolean execute(Game game) throws CommandExecuteException { 
 		
-		if (game.canPlayerBuy(Player.VALUE_GARLIC)) {
-			game.pushVampires();
-			game.update();
-			return true;
+		try {
+			if (game.pushVampires()) {
+				game.update();
+				return true;
+			}
+			
+			return false;
 		}
-		
-		throw new NotEnoughCoinsException("Not enough coins");
+		catch(CommandExecuteException exception) {
+			System.out.println(exception.getMessage());
+			throw new CommandExecuteException("this garlic", exception);
+		}
 	}
 	
 	

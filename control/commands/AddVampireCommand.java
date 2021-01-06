@@ -1,12 +1,10 @@
 package control.commands;
 
 import logic.Game;
-import logic.gameObjects.Dracula;
 import logic.gameObjects.Vampire;
-import exceptions.DraculaIsAliveException;
-import exceptions.NoMoreVampiresException;
-import exceptions.UnvalidPositionException;
+import exceptions.CommandParseException;
 import exceptions.CommandExecuteException;
+import exceptions.NoMoreVampiresException;
 
 public class AddVampireCommand extends Command {
 
@@ -24,61 +22,52 @@ public class AddVampireCommand extends Command {
 	@Override
 	public boolean execute(Game game) throws CommandExecuteException {
 		
-		if (Vampire.remaining != 0) {
-			if (typeVampire == null) {
-				if (game.isPositionValid(x, y)) {
-					game.addVampire(x, y);
-					return true;
-				}
-				else throw new UnvalidPositionException("Invalid Position");
-			}
-			
-		if (typeVampire.equalsIgnoreCase("D")) {
-			if (!Dracula.isAlive) {
-				if (game.isPositionValid(x, y)) {						
-					game.addDracula(x, y);
-					return true;	
-				}
+		try {
+			if (Vampire.remaining != 0) {
+				if (typeVampire == null) 
+					if (game.addVampireByUser(x, y)) return true;
+					
+				if (typeVampire.equalsIgnoreCase("D")) 
+					if (game.addDraculaByUser(x, y)) return true;
+					
+				if (typeVampire.equalsIgnoreCase("E")) 
+					if (game.addExplosiveByUser(x, y)) return true;
 				
-				else throw new UnvalidPositionException("Invalid position");	
-			}	
-			
-			else throw new DraculaIsAliveException();
-		}
-			
-		if (typeVampire.equalsIgnoreCase("E")) {
-			if (game.isPositionValid(x, y)) {
-				game.addExplosiveVampire(x, y);					
-				return true;	
+				return false;
 			}
-			
-			else throw new UnvalidPositionException("Invalid position.");
-			}
-		throw new CommandExecuteException("[ERROR]: Unvalid type: " + details);
+			throw new NoMoreVampiresException();
 		}
-		
-		else throw new NoMoreVampiresException();
+		catch(CommandExecuteException exception) {
+			System.out.println(exception.getMessage());
+			throw new CommandExecuteException ("add this vampire", exception);
+		}
 	}
 	
 	@Override
-	public Command parse(String[] commandWords) {
+	public Command parse(String[] commandWords) throws CommandParseException {
 		
 		if (commandWords[0].equals(name) || commandWords[0].equals(shortcut) && commandWords.length >= 3) {
-			
-			if (commandWords.length == 3) {
-				x = Integer.parseInt(commandWords[1]);
-				y = Integer.parseInt(commandWords[2]);
+			try {
+				if (commandWords.length == 3) {
+					x = Integer.parseInt(commandWords[1]);
+					y = Integer.parseInt(commandWords[2]);
+					return this;
+				}
+				if (commandWords.length == 4){
+					typeVampire = commandWords[1].toLowerCase();
+					x = Integer.parseInt(commandWords[2]);
+					y = Integer.parseInt(commandWords[3]);
+					return this;
+				}
+				
 			}
-			else {
-				typeVampire = commandWords[1].toLowerCase();
-				x = Integer.parseInt(commandWords[2]);
-				y = Integer.parseInt(commandWords[3]);
+			catch(NumberFormatException exception) { //Lo captura
+				System.out.println(exception.getMessage());
 			}
-			
-			return this;
 		}
 		
 		return null;
+		
 	}
 	
 	

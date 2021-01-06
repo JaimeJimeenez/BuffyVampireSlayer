@@ -17,7 +17,7 @@ public class CommandExecuteException extends GameException {
 	}
 	
 	public CommandExecuteException(String message, Throwable cause) {
-		super(message, cause);
+		super("[ERROR]: Failed to " + message, cause);
 	}
 	
 }

@@ -1,10 +1,8 @@
 package control.commands;
 
 import logic.Game;
-import logic.gameObjects.Player;
+import exceptions.CommandExecuteException;
 import exceptions.CommandParseException;
-import exceptions.NotEnoughCoinsException;
-
 
 public class LightFlashCommand extends Command{
 	
@@ -20,14 +18,19 @@ public class LightFlashCommand extends Command{
 	public String helpText() { return super.helpText(); }
 	
 	@Override
-	public boolean execute(Game game) throws NotEnoughCoinsException {
+	public boolean execute(Game game) throws CommandExecuteException{
 		
-		if (game.canPlayerBuy(Player.VALUE_LIGHT)) {
-			game.eraseVampires();
-			return true;
+		try {
+			if (game.eraseVampires()) {
+				game.update();
+				return true;
+			}
+			return false;
 		}
-		
-		throw new NotEnoughCoinsException("Not enough coins");
+		catch(CommandExecuteException exception) {
+			System.out.println(exception.getMessage());
+			throw new CommandExecuteException("this light", exception);
+		}
 	}
 	
 	@Override

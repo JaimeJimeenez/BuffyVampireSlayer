@@ -3,13 +3,14 @@ package exceptions;
 public class NotEnoughCoinsException extends CommandExecuteException {
 
 	private static final long serialVersionUID = 1L;
+	private static final String notEnoughCoinsMsg = "Not enough coins";
 
 	public NotEnoughCoinsException() {
 		super();
 	}
 	
 	public NotEnoughCoinsException(String message) {
-		super(message);
+		super("[ERROR]: " + message + notEnoughCoinsMsg);
 	}
 	
 	public NotEnoughCoinsException(Throwable cause) {

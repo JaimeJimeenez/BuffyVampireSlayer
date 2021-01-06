@@ -9,7 +9,7 @@ public class UnvalidPositionException extends CommandExecuteException {
 	}
 	
 	public UnvalidPositionException(String message) {
-		super(message);
+		super(message + "Unvalid position");
 	}
 	
 	public UnvalidPositionException(Throwable cause) {

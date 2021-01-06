@@ -5,7 +5,7 @@ public class DraculaIsAliveException extends CommandExecuteException {
 	private static final long serialVersionUID = 1L;
 
 	public DraculaIsAliveException() {
-		super();
+		super("[ERROR]: Dracula is already on board");
 	}
 	
 	public DraculaIsAliveException(String message) {

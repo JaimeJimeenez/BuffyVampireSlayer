@@ -1,9 +1,11 @@
 package logic;
 
 import view.*;
-
-import control.Controller;
 import logic.gameObjects.*;
+import exceptions.CommandExecuteException;
+import exceptions.UnvalidPositionException;
+import exceptions.NotEnoughCoinsException;
+import exceptions.DraculaIsAliveException;
 
 public class Game implements IPrintable{
 	
@@ -28,11 +30,20 @@ public class Game implements IPrintable{
 	
 	public int getDim_Y() { return level.getDimY(); }
 	
-	public void addSlayer(int pos_x, int pos_y) {
-		GameObject newSlayer = new Slayer(pos_x, pos_y, this);
+	public boolean addSlayer(int pos_x, int pos_y) throws CommandExecuteException {
 		
-		gameBoard.addObject(newSlayer);
-		player.bought(Slayer.COST);
+		if (isPositionValid(pos_x, pos_y) && pos_x < getDim_X() - 1) {
+			if (canPlayerBuy(Slayer.COST)) {
+				GameObject newSlayer = new Slayer(pos_x, pos_y, this);
+				
+				gameBoard.addObject(newSlayer);
+				player.bought(Slayer.COST);
+				return true;
+			}
+			
+			else throw new NotEnoughCoinsException("Defender cost is " + Slayer.COST + ": ");
+		}
+		else throw new UnvalidPositionException("Position (" + pos_x + " ," + pos_y + "): ");
 	}
 	
 	public void reset() {
@@ -50,14 +61,22 @@ public class Game implements IPrintable{
 		cycles++;
 	}
 	
-	public void pushVampires() { 
-		gameBoard.pushVampires();
-		player.bought(Player.VALUE_GARLIC);
+	public boolean pushVampires() throws CommandExecuteException { 
+		if (canPlayerBuy(Player.VALUE_GARLIC)) {
+			gameBoard.pushVampires();
+			player.bought(Player.VALUE_GARLIC);
+			return true;
+		}
+		throw new NotEnoughCoinsException("Defender cost is " + Player.VALUE_GARLIC + ": ");
 	}
 	
-	public void eraseVampires() {
-		gameBoard.eraseVampires();
-		player.bought(Player.VALUE_LIGHT);
+	public boolean eraseVampires() throws CommandExecuteException {
+		if (canPlayerBuy(Player.VALUE_LIGHT)) {
+			gameBoard.eraseVampires();
+			player.bought(Player.VALUE_LIGHT);
+			return true;
+		}
+		throw new NotEnoughCoinsException("Defender cost is " + Player.VALUE_LIGHT + ": "); 
 	}
 	
 	public void addBloodBank(int pos_x, int pos_y, int imputCoins) {
@@ -70,6 +89,27 @@ public class Game implements IPrintable{
 	public void addCoins() { player.addCoins(); }
 	
 	//Add Vampires
+	public void addVampire(int pos_x, int pos_y) {
+		GameObject newVampire = new Vampire(pos_x, pos_y, this);
+		gameBoard.addObject(newVampire);
+	}
+	
+	public void addDracula(int pos_x, int pos_y) {
+		GameObject dracula = new Dracula(pos_x, pos_y, this);
+		gameBoard.addObject(dracula);
+	}
+	
+	public void addExplosiveVampire(int pos_x, int pos_y) {
+		GameObject newExplosive = new ExplosiveVampire(pos_x, pos_y, this);
+		gameBoard.addObject(newExplosive);
+	}
+	
+	public void addVampiresIf() {	
+		isPossibleToAddVampire();
+		isPossibleToAddDracula();
+		isPossibleToAddExplosive();
+	}
+	
 	public void isPossibleToAddVampire() {
 		if (Player.rand.nextDouble() < level.getVampireFrecuency()) {
 			int pos_y = Player.rand.nextInt(level.getDimY());
@@ -91,25 +131,39 @@ public class Game implements IPrintable{
 		}
 	}
 	
-	public void addVampiresIf() {	
-		isPossibleToAddVampire();
-		isPossibleToAddDracula();
-		isPossibleToAddExplosive();
+	//Vampires added by user
+	public boolean addVampireByUser(int pos_x, int pos_y) throws CommandExecuteException {
+		
+		if (isPositionValid(pos_x, pos_y)) {
+			addVampire(pos_x, pos_y);
+			return true;
+		}
+		
+		throw new UnvalidPositionException("[ERROR]: Position (" + pos_x + ", " + pos_y + "): ");
 	}
 	
-	public void addVampire(int pos_x, int pos_y) {
-		GameObject newVampire = new Vampire(pos_x, pos_y, this);
-		gameBoard.addObject(newVampire);
+	public boolean addDraculaByUser(int pos_x, int pos_y) throws CommandExecuteException {
+		
+		if (!Dracula.isAlive) {
+			if (isPositionValid(pos_x, pos_y)) {
+				addDracula(pos_x, pos_y);
+				return true;
+			}
+			
+			throw new UnvalidPositionException("[ERROR]: Position (" + pos_x + ", " + pos_y + "): ");
+		}
+		
+		throw new DraculaIsAliveException();
 	}
 	
-	public void addDracula(int pos_x, int pos_y) {
-		GameObject dracula = new Dracula(pos_x, pos_y, this);
-		gameBoard.addObject(dracula);
-	}
-	
-	public void addExplosiveVampire(int pos_x, int pos_y) {
-		GameObject newExplosive = new ExplosiveVampire(pos_x, pos_y, this);
-		gameBoard.addObject(newExplosive);
+	public boolean addExplosiveByUser(int pos_x, int pos_y) throws CommandExecuteException {
+		
+		if (isPositionValid(pos_x, pos_y)) {
+			addExplosiveVampire(pos_x, pos_y);
+			return true;
+		}
+		
+		throw new UnvalidPositionException("[ERROR]: Position (" + pos_x + ", " + pos_y + "): ");
 	}
 	
 	public String serialize() {

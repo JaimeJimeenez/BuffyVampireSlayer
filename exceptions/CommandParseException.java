@@ -9,7 +9,7 @@ public class CommandParseException extends GameException {
 	}
 	
 	public CommandParseException(String message) {
-		super(message);
+		super("[ERROR]: Unvalid argument for " + message + "command, number expected:");
 	}
 	
 	public CommandParseException(Throwable cause) {
