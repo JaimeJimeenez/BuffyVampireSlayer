@@ -38,21 +38,18 @@ public class AddCommand extends Command{
 
 		if (commandWords[0].equals(name) || commandWords[0].equals(shortcut)) {
 			try {
-				if (commandWords.length == 3) {
+				if (commandWords.length == 3) { 
 					x = Integer.parseInt(commandWords[1]);
 					y = Integer.parseInt(commandWords[2]);
-					return this;
 				}
-				
-				throw new NumberFormatException("[ERROR]: Incorrect number of arguments for add command: ");
+				else throw new CommandParseException("[ERROR]: Incorrect number of arguments for add command: " + details);
+				return this;
 			}
-		
 			catch (NumberFormatException nfe) {
-				System.out.println(nfe.getMessage() + details); 	
+				throw new CommandParseException("add slayer command, number expected: " + details, nfe);
 			}
-			
-			return this;
 		}
+		
 		return null;
 	}
 	

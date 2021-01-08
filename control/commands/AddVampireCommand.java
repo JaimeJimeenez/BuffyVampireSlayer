@@ -30,8 +30,9 @@ public class AddVampireCommand extends Command {
 				if (typeVampire.equalsIgnoreCase("D")) 
 					if (game.addDraculaByUser(x, y)) return true;
 					
-				if (typeVampire.equalsIgnoreCase("E")) 
+				if (typeVampire.equalsIgnoreCase("E")) {
 					if (game.addExplosiveByUser(x, y)) return true;
+				}	
 				
 				return false;
 			}
@@ -39,35 +40,39 @@ public class AddVampireCommand extends Command {
 		}
 		catch(CommandExecuteException exception) {
 			System.out.println(exception.getMessage());
-			throw new CommandExecuteException ("add this vampire", exception);
+			throw new CommandExecuteException ("add this vampire ", exception);
 		}
 	}
 	
 	@Override
 	public Command parse(String[] commandWords) throws CommandParseException {
 		
-		if (commandWords[0].equals(name) || commandWords[0].equals(shortcut) && commandWords.length >= 3) {
+		if (commandWords[0].equals(name) || commandWords[0].equals(shortcut)) {
 			try {
 				if (commandWords.length == 3) {
 					x = Integer.parseInt(commandWords[1]);
 					y = Integer.parseInt(commandWords[2]);
-					return this;
 				}
 				if (commandWords.length == 4){
+					if (commandWords[1].length() != 1) throw new CommandParseException("[ERROR]: Unvalid type: " + details);
 					typeVampire = commandWords[1].toLowerCase();
 					x = Integer.parseInt(commandWords[2]);
 					y = Integer.parseInt(commandWords[3]);
-					return this;
 				}
+				else throw new CommandParseException("add command: " + details);
+				return this;
+			}
+			catch(CommandParseException typeException) {
+				System.out.println(typeException.getMessage());
+			}
+			catch(NumberFormatException nfe) {
+				throw new CommandParseException("add vampire", nfe);
 				
 			}
-			catch(NumberFormatException exception) { //Lo captura
-				System.out.println(exception.getMessage());
-			}
+			
 		}
 		
 		return null;
-		
 	}
 	
 	

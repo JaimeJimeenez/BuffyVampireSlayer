@@ -41,9 +41,9 @@ public class Game implements IPrintable{
 				return true;
 			}
 			
-			else throw new NotEnoughCoinsException("Defender cost is " + Slayer.COST + ": ");
+			throw new NotEnoughCoinsException("Defender cost is " + Slayer.COST + ": ");
 		}
-		else throw new UnvalidPositionException("Position (" + pos_x + " ," + pos_y + "): ");
+		throw new UnvalidPositionException("[ERROR]: Position (" + pos_x + ", " + pos_y + "): ");
 	}
 	
 	public void reset() {
@@ -58,7 +58,7 @@ public class Game implements IPrintable{
 	public void update() {
 		player.updateCoins();
 		gameBoard.update(this);
-		cycles++;
+		if (!isFinished()) cycles++;
 	}
 	
 	public boolean pushVampires() throws CommandExecuteException { 
@@ -67,7 +67,7 @@ public class Game implements IPrintable{
 			player.bought(Player.VALUE_GARLIC);
 			return true;
 		}
-		throw new NotEnoughCoinsException("Defender cost is " + Player.VALUE_GARLIC + ": ");
+		throw new NotEnoughCoinsException("Garlic Push cost is " + Player.VALUE_GARLIC + ": ");
 	}
 	
 	public boolean eraseVampires() throws CommandExecuteException {
@@ -76,14 +76,24 @@ public class Game implements IPrintable{
 			player.bought(Player.VALUE_LIGHT);
 			return true;
 		}
-		throw new NotEnoughCoinsException("Defender cost is " + Player.VALUE_LIGHT + ": "); 
+		throw new NotEnoughCoinsException("Light Flash cost is " + Player.VALUE_LIGHT + ": "); 
 	}
 	
-	public void addBloodBank(int pos_x, int pos_y, int imputCoins) {
-		GameObject newBank = new BankBlood(pos_x, pos_y, imputCoins, this, player);
+	public boolean addBloodBank(int pos_x, int pos_y, int imputCoins) throws CommandExecuteException{
 		
-		gameBoard.addObject(newBank);
-		player.bought(imputCoins);
+		if (isPositionValid(pos_x, pos_y)) {
+			if (canPlayerBuy(imputCoins)) {
+				GameObject newBank = new BankBlood(pos_x, pos_y, imputCoins, this, player);
+				
+				player.bought(imputCoins);
+				gameBoard.addObject(newBank);
+				return true;
+			}
+			
+			throw new NotEnoughCoinsException("Defender cost is " + imputCoins + ": ");
+		}
+		
+		throw new UnvalidPositionException("[ERROR]: Position (" + pos_x + ", " + pos_y + "): ");
 	}
 	
 	public void addCoins() { player.addCoins(); }
@@ -107,27 +117,41 @@ public class Game implements IPrintable{
 	public void addVampiresIf() {	
 		isPossibleToAddVampire();
 		isPossibleToAddDracula();
-		isPossibleToAddExplosive();
+		isPossibleToAddExplosive();	
+			
 	}
 	
 	public void isPossibleToAddVampire() {
-		if (Player.rand.nextDouble() < level.getVampireFrecuency()) {
-			int pos_y = Player.rand.nextInt(level.getDimY());
-			if (isPossibleToAdd(level.getDimX() - 1, pos_y)) addVampire(level.getDimX() - 1, pos_y);
+		
+		if (Vampire.remaining != 0) {
+			if (Player.rand.nextDouble() < level.getVampireFrecuency()) {
+				int pos_y = Player.rand.nextInt(level.getDimY());
+				if (isPositionEmpty(level.getDimX() - 1, pos_y)) addVampire(level.getDimX() - 1, pos_y);
+				else System.out.println("No añadido");
+			}
 		}
+			
 	}
 	
 	public void isPossibleToAddDracula() {
-		if (Player.rand.nextDouble() < level.getVampireFrecuency()) {
-			int pos_y = Player.rand.nextInt(level.getDimY());
-			if (isPossibleToAdd(level.getDimX() - 1, pos_y) && !Dracula.isAlive) addDracula(level.getDimX() - 1, pos_y);
+		
+		if (Vampire.remaining != 0) {
+			if (Player.rand.nextDouble() < level.getVampireFrecuency()) {
+				int pos_y = Player.rand.nextInt(level.getDimY());
+				if (isPositionEmpty(level.getDimX() - 1, pos_y) && !Dracula.isAlive) addDracula(level.getDimX() - 1, pos_y);
+				else System.out.println("no añadido");
+			}
 		}
 	}
 	
 	public void isPossibleToAddExplosive() {
-		if (Player.rand.nextDouble() <  level.getVampireFrecuency()) {
-			int pos_y = Player.rand.nextInt(level.getDimY());
-			if (isPossibleToAdd(level.getDimX() - 1, pos_y)) addExplosiveVampire(level.getDimX() - 1, pos_y);
+		
+		if (Vampire.remaining != 0) {
+			if (Player.rand.nextDouble() < level.getVampireFrecuency()) {
+				int pos_y = Player.rand.nextInt(level.getDimY());
+				if (isPositionEmpty(level.getDimX() - 1, pos_y)) addExplosiveVampire(level.getDimX() - 1, pos_y);
+				else System.out.println("No añadido."); //No se ejecuta 
+			}
 		}
 	}
 	
@@ -182,6 +206,7 @@ public class Game implements IPrintable{
 	
 	public boolean canPlayerBuy(int cost) { return player.getCoins() >= cost; }
 	
+	//Cambiar esto 
 	public boolean isPossibleToAdd(int pos_x, int pos_y) { return Vampire.remaining != 0 && isPositionValid(pos_x, pos_y); }
 	
 	public boolean isPositionValid(int pos_x, int pos_y) { return isPositionEmpty(pos_x, pos_y) && (pos_x >= 0 && pos_y >= 0) && pos_y < level.getDimY(); }

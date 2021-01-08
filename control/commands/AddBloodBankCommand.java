@@ -22,29 +22,36 @@ public class AddBloodBankCommand extends Command {
 	@Override
 	public boolean execute(Game game) throws CommandExecuteException {
 		
-		if (game.isPositionValid(x, y) && x < game.getDim_X() - 1) {
-			if (game.canPlayerBuy(imputCoins)) {
-				game.addBloodBank(x, y, imputCoins);
+		try {
+			if (game.addBloodBank(x, y, imputCoins)) {
 				game.update();
 				return true;
 			}
 			
-			else throw new NotEnoughCoinsException("Not enough coins");
+			return false;
 		}
-		
-		else throw new UnvalidPositionException("Invalid position");
+		catch(CommandExecuteException exception) {
+			System.out.println(exception.getMessage());
+			throw new CommandExecuteException("this bank", exception);
+		}
 	}
 	
 	@Override
 	public Command parse(String[] commandWords) throws CommandParseException{
 		
-		if ((commandWords[0].equals(name) || (commandWords[0].equals(shortcut)) && commandWords.length == 4)) {
-			x = Integer.parseInt(commandWords[1]);
-			y = Integer.parseInt(commandWords[2]);
-			imputCoins = Integer.parseInt(commandWords[3]);
-			return this;
+		if (commandWords[0].equals(name) || commandWords[0].equals(shortcut)) {
+			try {
+				if (commandWords.length == 4) {
+					x = Integer.parseInt(commandWords[1]);
+					y = Integer.parseInt(commandWords[2]);
+					imputCoins = Integer.parseInt(commandWords[3]);
+				}
+				return this;
+			}
+			catch(NumberFormatException nfe) {
+				throw new CommandParseException("bank ", nfe);
+			} 	
 		}
-		
 		return null;
 	}
 	

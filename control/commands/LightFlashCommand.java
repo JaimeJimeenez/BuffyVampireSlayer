@@ -29,7 +29,7 @@ public class LightFlashCommand extends Command{
 		}
 		catch(CommandExecuteException exception) {
 			System.out.println(exception.getMessage());
-			throw new CommandExecuteException("this light", exception);
+			throw new CommandExecuteException("light flash", exception);
 		}
 	}
 	
